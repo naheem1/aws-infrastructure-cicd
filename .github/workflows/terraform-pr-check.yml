@@ -36,3 +36,11 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
         continue-on-error: false
+      
+      - name: Terraform Init
+        run: terraform init -backend=false
+        working-directory: .
+      
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: .
