@@ -1,6 +1,6 @@
 terraform {
   required_version = ">= 1.6.0"
-  
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -15,7 +15,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "test_bucket" {
   bucket = "${var.project_name}-test-bucket-${var.environment}"
-  
+
   tags = {
     Name        = "${var.project_name}-bucket"
     Environment = var.environment
@@ -25,8 +25,12 @@ resource "aws_s3_bucket" "test_bucket" {
 
 resource "aws_s3_bucket_versioning" "test_bucket" {
   bucket = aws_s3_bucket.test_bucket.id
-  
+
   versioning_configuration {
     status = "Enabled"
   }
-}
+} # Test workflow trigger
+# Testing format check
+# Testing validate step
+
+
