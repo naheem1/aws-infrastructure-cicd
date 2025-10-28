@@ -20,6 +20,8 @@ resource "aws_s3_bucket" "test_bucket" {
     Name        = "${var.project_name}-bucket"
     Environment = var.environment
     ManagedBy   = "Terraform"
+    TestTag     = "Step4Demo" 
+    AnotherTag  = "TestingPlanComments"
   }
 }
 
