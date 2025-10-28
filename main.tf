@@ -32,3 +32,8 @@ resource "aws_s3_bucket_versioning" "test_bucket" {
 } # Test workflow trigger
 # Testing format check
 # Testing validate step
+
+# This is intentionally broken
+invalid_resource "bad" {
+  this_doesnt_exist = "test"
+}
