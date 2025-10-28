@@ -20,6 +20,8 @@ resource "aws_s3_bucket" "test_bucket" {
     Name        = "${var.project_name}-bucket"
     Environment = var.environment
     ManagedBy   = "Terraform"
+    TestTag     = "Step4Demo"
+    AnotherTag  = "TestingPlanComments"
   }
 }
 
@@ -34,3 +36,4 @@ resource "aws_s3_bucket_versioning" "test_bucket" {
 # Testing validate step
 
 
+# Security scan test

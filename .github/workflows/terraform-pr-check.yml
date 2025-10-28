@@ -1,4 +1,4 @@
-name: Terraform PR Validation
+#name: Terraform PR Validation
 
 on:
   pull_request:
@@ -25,7 +25,8 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.13.4
+          terraform_version: 1.6.0
+          terraform_wrapper: false
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -44,6 +45,7 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
         working-directory: .
+      
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false
@@ -73,4 +75,8 @@ jobs:
               repo: context.repo.repo,
               body: output
             });
-            
+      
+      - name: Run tfsec Security Scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: true
