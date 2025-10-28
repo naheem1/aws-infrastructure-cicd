@@ -36,3 +36,4 @@ resource "aws_s3_bucket_versioning" "test_bucket" {
 # Testing validate step
 
 
+# Security scan test
