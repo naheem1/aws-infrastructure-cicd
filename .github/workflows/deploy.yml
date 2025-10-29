@@ -1,0 +1,94 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  TF_VERSION: 1.6.0
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Select Staging Workspace
+        run: terraform workspace select staging || terraform workspace new staging
+      
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="staging.tfvars" -out=staging.tfplan
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve staging.tfplan
+      
+      - name: Output Infrastructure Details
+        run: terraform output
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy-staging
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Select Production Workspace
+        run: terraform workspace select production || terraform workspace new production
+      
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="production.tfvars" -out=production.tfplan
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve production.tfplan
+      
+      - name: Output Infrastructure Details
+        run: terraform output
