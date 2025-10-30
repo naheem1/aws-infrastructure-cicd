@@ -10,11 +10,7 @@ variable "project_name" {
   default     = "cicd-demo"
 }
 
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "dev"
-}
+
 
 # variables.tf
 
