@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "test_bucket" {
-  bucket = "${var.project_name}-test-bucket-${var.environment}"
+  bucket = "${var.project_name}-test-bucket-${var.environment}-v2"
 
   tags = {
     Name        = "${var.project_name}-bucket"
